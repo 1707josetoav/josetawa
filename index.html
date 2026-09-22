@@ -1,449 +1,834 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="es" class="dark scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio Profesional - 4 Trabajos Destacados</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f5ff',
-                            100: '#e0ebff',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            950: '#0b1329',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #030712;
-            color: #f3f4f6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
+<title>Voice Falling Letters</title>
 
-        .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5), 0 10px 15px -5px rgba(59, 130, 246, 0.15);
-        }
+<style>
 
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+*{
+    box-sizing:border-box;
+}
 
-        .modal-backdrop {
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#030303;
+    font-family:Arial,Helvetica,sans-serif;
+}
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #030712;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1f2937;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #374151;
-        }
-    </style>
+/* =========================================================
+   ESCENA
+   ========================================================= */
+
+#scene{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+}
+
+/* =========================================================
+   INTERFAZ
+   ========================================================= */
+
+#interface{
+    position:fixed;
+    z-index:1000;
+    top:25px;
+    left:50%;
+    transform:translateX(-50%);
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    gap:12px;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:30px;
+
+    padding:12px 24px;
+
+    background:rgba(255,255,255,.05);
+    color:white;
+
+    font-size:12px;
+    letter-spacing:2px;
+
+    cursor:pointer;
+
+    transition:
+        background .2s,
+        color .2s,
+        transform .2s;
+}
+
+button:hover{
+    background:white;
+    color:black;
+    transform:scale(1.05);
+}
+
+#stop{
+    border-color:#ff3333;
+    color:#ff3333;
+}
+
+#stop:hover{
+    background:#ff3333;
+    color:white;
+}
+
+#status{
+    color:#666;
+    font-size:10px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+}
+
+/* =========================================================
+   LETRAS
+   ========================================================= */
+
+.letter{
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    color:#ff1616;
+
+    font-size:clamp(
+        40px,
+        7vw,
+        100px
+    );
+
+    font-weight:800;
+
+    pointer-events:none;
+    user-select:none;
+
+    will-change:
+        transform,
+        opacity;
+
+    text-shadow:
+        0 0 8px rgba(255,0,0,.8),
+        0 0 25px rgba(255,0,0,.45),
+        0 0 50px rgba(255,0,0,.15);
+}
+
+/* =========================================================
+   PARTÍCULAS
+   ========================================================= */
+
+.particle{
+    position:absolute;
+
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:#ff2020;
+
+    box-shadow:
+        0 0 5px #ff0000,
+        0 0 12px rgba(255,0,0,.8);
+
+    pointer-events:none;
+
+    will-change:
+        transform,
+        opacity;
+}
+
+</style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
 
-    <!-- Navigation Bar -->
-    <nav class="sticky top-0 z-40 border-b border-gray-800/80 bg-gray-950/70 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-brand-500/25">
-                    P
-                </div>
-                <div>
-                    <span class="text-lg font-bold text-white tracking-tight">Portafolio</span>
-                    <span class="text-xs block text-gray-400 font-medium">Trabajos Completados</span>
-                </div>
-            </div>
+<body>
 
-            <div class="hidden sm:flex items-center gap-6 text-sm font-medium text-gray-300">
-                <a href="#proyectos" class="hover:text-brand-400 transition">Proyectos</a>
-                <a href="#sobre-mi" class="hover:text-brand-400 transition">Sobre Mí</a>
-                <a href="#contacto" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold transition shadow-lg shadow-brand-600/20">Contacto</a>
-            </div>
-        </div>
-    </nav>
+<div id="scene"></div>
 
-    <!-- Hero Section -->
-    <header class="relative overflow-hidden pt-16 pb-12 sm:pt-24 sm:pb-16 border-b border-gray-800/60">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(59,130,246,0.15),rgba(255,255,255,0))]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-semibold uppercase tracking-wider mb-6">
-                <span class="w-2 h-2 rounded-full bg-brand-400 animate-ping"></span> 4 Proyectos Seleccionados
-            </div>
-            <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight max-w-4xl mx-auto">
-                Transformando ideas complejas en <span class="gradient-text">experiencias digitales</span>
-            </h1>
-            <p class="mt-6 text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-                Una muestra enfocada de 4 casos de éxito completados que abarcan desarrollo web, aplicaciones móviles, paneles de inteligencia artificial y sistemas de diseño.
-            </p>
-        </div>
-    </header>
+<div id="interface">
 
-    <!-- Main Content & Projects Grid -->
-    <main id="proyectos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-grow w-full">
-        
-        <!-- Filter Tabs -->
-        <div class="flex flex-wrap items-center justify-center gap-2 mb-12" id="filter-buttons">
-            <button onclick="filterProjects('todos')" class="filter-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-brand-600 text-white shadow-lg shadow-brand-600/20" data-filter="todos">
-                Todos (4)
-            </button>
-            <button onclick="filterProjects('Desarrollo Web')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-gray-900/80 text-gray-400 hover:text-white border border-gray-800" data-filter="Desarrollo Web">
-                Desarrollo Web
-            </button>
-            <button onclick="filterProjects('Inteligencia Artificial')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-gray-900/80 text-gray-400 hover:text-white border border-gray-800" data-filter="Inteligencia Artificial">
-                Inteligencia Artificial
-            </button>
-            <button onclick="filterProjects('App Móvil')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-gray-900/80 text-gray-400 hover:text-white border border-gray-800" data-filter="App Móvil">
-                App Móvil
-            </button>
-            <button onclick="filterProjects('UI/UX')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-gray-900/80 text-gray-400 hover:text-white border border-gray-800" data-filter="UI/UX">
-                Diseño UI/UX
-            </button>
-        </div>
+    <div class="buttons">
 
-        <!-- 2x2 Projects Grid -->
-        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Dynamic JavaScript Content (4 projects) -->
-        </div>
+        <button id="start">
+            START
+        </button>
 
-    </main>
+        <button id="stop">
+            STOP
+        </button>
 
-    <!-- About Section -->
-    <section id="sobre-mi" class="border-t border-gray-800/60 bg-gray-950/40 py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-4">Enfoque en Calidad y Rendimiento</h2>
-                    <p class="text-gray-400 leading-relaxed mb-6">
-                        Cada proyecto entregado refleja un balance minucioso entre arquitectura escalable, diseño atractivo enfocado en el usuario y resultados medibles de negocio.
-                    </p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800">
-                            <span class="text-3xl font-extrabold text-brand-400 block">100%</span>
-                            <span class="text-xs text-gray-400">Entrega a Tiempo</span>
-                        </div>
-                        <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800">
-                            <span class="text-3xl font-extrabold text-indigo-400 block">+99%</span>
-                            <span class="text-xs text-gray-400">Satisfacción Cliente</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-8 rounded-2xl glass-card border border-gray-800 space-y-4">
-                    <h3 class="text-xl font-bold text-white">Stack Tecnológico Principal</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">React / Next.js</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">TypeScript</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">Node.js & Python</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">Tailwind CSS</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">React Native</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">Figma & UI Systems</span>
-                        <span class="px-3 py-1.5 rounded-lg bg-gray-800 text-xs font-semibold text-gray-300">FastAPI & OpenAI API</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contacto" class="border-t border-gray-800 bg-gray-950 py-12 text-center text-gray-500 text-sm">
-        <div class="max-w-7xl mx-auto px-4 space-y-4">
-            <p class="text-gray-300 font-semibold text-base">¿Tienes un proyecto en mente?</p>
-            <div class="flex justify-center gap-6">
-                <a href="mailto:contacto@ejemplo.com" class="text-brand-400 hover:underline">contacto@ejemplo.com</a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener" class="hover:text-white transition">LinkedIn</a>
-                <a href="https://github.com" target="_blank" rel="noopener" class="hover:text-white transition">GitHub</a>
-            </div>
-            <p class="text-xs text-gray-600 pt-4">© <span id="year"></span> Portafolio Profesional. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
-    <!-- Modal: Detalle del Proyecto -->
-    <div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-950/85 backdrop-blur-md opacity-0 invisible modal-backdrop" onclick="closeDetailModalOnBackdrop(event)">
-        <div class="glass-card bg-gray-900 border border-gray-700/80 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative transition-transform transform scale-95" id="detail-modal-card">
-            
-            <!-- Botón Cerrar -->
-            <button onclick="closeDetailModal()" class="absolute top-4 right-4 z-20 p-2 rounded-full bg-gray-900/80 text-gray-400 hover:text-white hover:bg-gray-800 border border-gray-700 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-
-            <!-- Imagen principal del Modal -->
-            <div class="relative h-64 sm:h-80 w-full overflow-hidden rounded-t-2xl">
-                <img id="modal-img" src="" alt="Project Image" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/30 to-transparent"></div>
-                <div class="absolute bottom-4 left-6 right-6">
-                    <div id="modal-tags" class="flex flex-wrap gap-2 mb-2"></div>
-                    <h2 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-white"></h2>
-                </div>
-            </div>
-
-            <!-- Contenido del Modal -->
-            <div class="p-6 sm:p-8 space-y-6">
-                
-                <div>
-                    <h3 class="text-xs font-bold text-brand-400 uppercase tracking-wider mb-2">Resumen Ejecutivo</h3>
-                    <p id="modal-short-desc" class="text-gray-300 text-base leading-relaxed"></p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-gray-800">
-                    <div>
-                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">El Desafío</h4>
-                        <p id="modal-challenge" class="text-gray-300 text-sm leading-relaxed"></p>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">La Solución</h4>
-                        <p id="modal-solution" class="text-gray-300 text-sm leading-relaxed"></p>
-                    </div>
-                </div>
-
-                <div class="pt-2 border-t border-gray-800">
-                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Resultados e Impacto</h4>
-                    <p id="modal-results" class="text-gray-300 text-sm leading-relaxed font-medium"></p>
-                </div>
-
-                <!-- Botones y Enlaces -->
-                <div class="border-t border-gray-800 pt-6 flex flex-wrap gap-4 items-center justify-between">
-                    <div class="flex gap-3 w-full sm:w-auto">
-                        <a id="modal-demo-btn" href="#" target="_blank" rel="noopener" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm transition shadow-lg shadow-brand-600/25">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                            Demo En Vivo
-                        </a>
-                        <a id="modal-repo-btn" href="#" target="_blank" rel="noopener" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium text-sm border border-gray-700 transition">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                            </svg>
-                            Ver Código
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <script>
-        // Data estática completa de los 4 proyectos hechos
-        const projectsData = [
-            {
-                id: 1,
-                title: "E-Commerce Experience",
-                category: "Desarrollo Web",
-                image: "https://images.unsplash.com/photo-1556742049-0a675409b7cc?auto=format&fit=crop&w=1200&q=80",
-                tags: ["Next.js", "TypeScript", "Stripe", "Tailwind CSS"],
-                shortDesc: "Plataforma de comercio electrónico ultrarrápida con pagos en tiempo real y arquitectura de catálogo dinámico.",
-                challenge: "El cliente experimentaba altas tasas de abandono en el carrito debido a tiempos de carga superiores a 4.5s y un checkout confuso.",
-                solution: "Se reestructuró la plataforma utilizando Next.js App Router con renderizado híbrido (ISR), optimización de imágenes y pasarela Stripe en un solo paso.",
-                results: "⚡ Reducción del tiempo de carga a 0.8s y un incremento del 42% en la conversión de ventas durante el primer trimestre.",
-                demoUrl: "https://example.com/demo1",
-                repoUrl: "https://github.com/example/ecommerce"
-            },
-            {
-                id: 2,
-                title: "AI Analytics Dashboard",
-                category: "Inteligencia Artificial",
-                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
-                tags: ["Python", "FastAPI", "React", "D3.js", "OpenAI"],
-                shortDesc: "Panel de control interactivo para análisis predictivo de datos empresariales impulsado por inteligencia artificial.",
-                challenge: "Convertir millones de registros de ventas dispersos en insights comprensibles y predicciones accionables para ejecutivos.",
-                solution: "Desarrollo de un backend en Python/FastAPI conectado a modelos de machine learning y OpenAI API, junto a un dashboard fluido en React con gráficos dinámicos en D3.js.",
-                results: "🤖 Automatización de reportes semanales ahorrando más de 15 horas de trabajo manual por equipo directivo.",
-                demoUrl: "https://example.com/demo2",
-                repoUrl: "https://github.com/example/ai-dashboard"
-            },
-            {
-                id: 3,
-                title: "Fintech Mobile App",
-                category: "App Móvil",
-                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80",
-                tags: ["React Native", "Redux Toolkit", "Node.js", "Biometría"],
-                shortDesc: "Aplicación móvil para gestión financiera personal, transferencias inmediatas e inversión automatizada.",
-                challenge: "Ofrecer seguridad bancaria de alto nivel sin comprometer la velocidad ni la sencillez de la experiencia de usuario.",
-                solution: "Construcción en React Native con encriptación de grado militar, autenticación biométrica (FaceID/Huella) y notificaciones en tiempo real.",
-                results: "📱 Más de 50,000 descargas activas en iOS y Android con una valoración media de 4.8/5 estrellas en tiendas.",
-                demoUrl: "https://example.com/demo3",
-                repoUrl: "https://github.com/example/fintech-app"
-            },
-            {
-                id: 4,
-                title: "Brand Identity & Design System",
-                category: "UI/UX",
-                image: "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80",
-                tags: ["Figma", "Design Systems", "Storybook", "UI/UX"],
-                shortDesc: "Sistema de diseño escalable y reestructuración de identidad visual completa para una plataforma SaaS.",
-                challenge: "Inconsistencia visual y lentitud en los equipos de desarrollo debido a la falta de componentes estandarizados.",
-                solution: "Creación de una librería de componentes reusable en Figma e implementada con Storybook, definiendo guías de accesibilidad WCAG AA.",
-                results: "🎨 Aceleración del 60% en la velocidad de entrega de nuevas pantallas y una experiencia visual 100% coherente.",
-                demoUrl: "https://example.com/demo4",
-                repoUrl: "https://github.com/example/design-system"
-            }
-        ];
+    <div id="status">
+        detenido
+    </div>
 
-        let currentFilter = 'todos';
+</div>
 
-        // Set dynamic current year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
 
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            grid.innerHTML = '';
+<script>
 
-            const filteredProjects = currentFilter === 'todos' 
-                ? projectsData 
-                : projectsData.filter(p => p.category === currentFilter);
+/* =========================================================
+   ELEMENTOS
+   ========================================================= */
 
-            filteredProjects.forEach(project => {
-                const tagsHtml = project.tags.map(tag => 
-                    `<span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-gray-800/90 text-brand-300 border border-gray-700/60">${tag}</span>`
-                ).join('');
+const scene =
+    document.getElementById("scene");
 
-                const card = document.createElement('div');
-                card.className = "glass-card rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 group";
-                
-                card.innerHTML = `
-                    <div class="relative h-60 sm:h-64 overflow-hidden">
-                        <img src="${project.image}" alt="${project.title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent opacity-90"></div>
-                        <div class="absolute top-4 left-4 flex flex-wrap gap-1.5">
-                            ${tagsHtml}
-                        </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-900/90 text-gray-300 border border-gray-700 backdrop-blur-md">
-                                ${project.category}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-4">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white group-hover:text-brand-400 transition-colors">${project.title}</h3>
-                            <p class="mt-3 text-gray-400 text-sm sm:text-base leading-relaxed line-clamp-2">${project.shortDesc}</p>
-                        </div>
-                        <div class="pt-4 border-t border-gray-800/80">
-                            <button onclick="openDetailModal(${project.id})" class="w-full py-3 px-5 rounded-xl bg-gray-800 hover:bg-brand-600 text-gray-200 hover:text-white font-semibold text-sm transition-all duration-300 border border-gray-700 hover:border-brand-500/50 flex items-center justify-center gap-2 shadow-sm">
-                                <span>Ver Detalle del Trabajo</span>
-                                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+const startButton =
+    document.getElementById("start");
+
+const stopButton =
+    document.getElementById("stop");
+
+const status =
+    document.getElementById("status");
+
+
+/* =========================================================
+   RECONOCIMIENTO DE VOZ
+   ========================================================= */
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+let recognition = null;
+
+let listening = false;
+
+let lastTranscript = "";
+
+
+/* =========================================================
+   COMPROBAR COMPATIBILIDAD
+   ========================================================= */
+
+if(!SpeechRecognition){
+
+    status.textContent =
+        "reconocimiento de voz no compatible";
+
+    startButton.disabled = true;
+
+}else{
+
+    recognition =
+        new SpeechRecognition();
+
+    recognition.lang = "es-ES";
+
+    recognition.continuous = true;
+
+    recognition.interimResults = true;
+
+    recognition.maxAlternatives = 1;
+
+
+    /* =====================================================
+       RESULTADOS DE VOZ
+       ===================================================== */
+
+    recognition.onresult = function(event){
+
+        if(!listening)return;
+
+        let transcript = "";
+
+        for(
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ){
+
+            transcript +=
+                event.results[i][0].transcript;
         }
 
-        // Filter projects functionality
-        function filterProjects(category) {
-            currentFilter = category;
-            
-            // Update filter buttons visual state
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.getAttribute('data-filter') === category) {
-                    btn.className = "filter-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-brand-600 text-white shadow-lg shadow-brand-600/20";
-                } else {
-                    btn.className = "filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-gray-900/80 text-gray-400 hover:text-white border border-gray-800";
-                }
-            });
+        transcript =
+            transcript.trim();
 
-            renderProjects();
+        if(!transcript)return;
+
+
+        /*
+         * Intentamos detectar solamente
+         * las palabras nuevas.
+         */
+
+        let newText = transcript;
+
+        if(
+            lastTranscript &&
+            transcript.startsWith(lastTranscript)
+        ){
+
+            newText =
+                transcript.substring(
+                    lastTranscript.length
+                );
         }
 
-        function openDetailModal(id) {
-            const project = projectsData.find(p => p.id === id);
-            if (!project) return;
-            
-            document.getElementById('modal-img').src = project.image;
-            document.getElementById('modal-title').textContent = project.title;
-            document.getElementById('modal-short-desc').textContent = project.shortDesc;
-            document.getElementById('modal-challenge').textContent = project.challenge;
-            document.getElementById('modal-solution').textContent = project.solution;
-            document.getElementById('modal-results').textContent = project.results;
-            document.getElementById('modal-demo-btn').href = project.demoUrl;
-            document.getElementById('modal-repo-btn').href = project.repoUrl;
+        lastTranscript =
+            transcript;
 
-            const modalTags = document.getElementById('modal-tags');
-            modalTags.innerHTML = project.tags.map(tag => 
-                `<span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-brand-500/20 text-brand-300 border border-brand-500/30">${tag}</span>`
-            ).join('');
 
-            const modal = document.getElementById('detail-modal');
-            const card = document.getElementById('detail-modal-card');
-            
-            modal.classList.remove('invisible', 'opacity-0');
-            modal.classList.add('opacity-100');
-            card.classList.remove('scale-95');
-            card.classList.add('scale-100');
+        newText =
+            newText.trim();
 
-            document.body.style.overflow = 'hidden';
+
+        if(newText){
+
+            createText(newText);
         }
+    };
 
-        function closeDetailModal() {
-            const modal = document.getElementById('detail-modal');
-            const card = document.getElementById('detail-modal-card');
-            
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0');
-            card.classList.remove('scale-100');
-            card.classList.add('scale-95');
 
-            setTimeout(() => {
-                modal.classList.add('invisible');
-                document.body.style.overflow = 'auto';
-            }, 300);
-        }
+    /* =====================================================
+       REINICIAR AUTOMÁTICAMENTE
+       ===================================================== */
 
-        function closeDetailModalOnBackdrop(e) {
-            if (e.target === document.getElementById('detail-modal')) {
-                closeDetailModal();
+    recognition.onend = function(){
+
+        if(listening){
+
+            try{
+
+                recognition.start();
+
+            }catch(error){
+
+                /*
+                 * Puede ocurrir si Chrome
+                 * todavía está cerrando
+                 * la sesión anterior.
+                 */
+
             }
         }
+    };
 
-        // ESC key to close modal
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeDetailModal();
-        });
 
-        // Initialize grid on load
-        window.onload = function() {
-            renderProjects();
-        };
-    </script>
+    /* =====================================================
+       ERRORES
+       ===================================================== */
+
+    recognition.onerror = function(event){
+
+        if(event.error === "aborted"){
+            return;
+        }
+
+        status.textContent =
+            "error: " + event.error;
+    };
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+startButton.addEventListener(
+    "click",
+    function(){
+
+        if(!recognition)return;
+
+        listening = true;
+
+        lastTranscript = "";
+
+        status.textContent =
+            "escuchando...";
+
+        try{
+
+            recognition.start();
+
+        }catch(error){
+
+            console.log(error);
+        }
+    }
+);
+
+
+/* =========================================================
+   STOP
+   ========================================================= */
+
+stopButton.addEventListener(
+    "click",
+    function(){
+
+        listening = false;
+
+        lastTranscript = "";
+
+        status.textContent =
+            "detenido";
+
+        if(recognition){
+
+            try{
+
+                recognition.stop();
+
+            }catch(error){
+
+                console.log(error);
+            }
+        }
+    }
+);
+
+
+/* =========================================================
+   CREAR TEXTO
+   ========================================================= */
+
+function createText(text){
+
+    if(!listening)return;
+
+
+    const characters =
+        [...text];
+
+
+    /*
+     * Calculamos el espacio
+     * entre letras.
+     */
+
+    const spacing =
+        Math.min(
+            75,
+            Math.max(
+                32,
+                window.innerWidth /
+                (characters.length + 2)
+            )
+        );
+
+
+    const totalWidth =
+        characters.length *
+        spacing;
+
+
+    const startX =
+        window.innerWidth / 2 -
+        totalWidth / 2;
+
+
+    /*
+     * Cada nueva frase aparece
+     * ligeramente desplazada.
+     */
+
+    const startY =
+        window.innerHeight * .18 +
+        Math.random() * 80;
+
+
+    characters.forEach(
+        function(character,index){
+
+            /*
+             * Los espacios no crean letras.
+             */
+
+            if(character === " "){
+                return;
+            }
+
+
+            const letter =
+                document.createElement("div");
+
+
+            letter.className =
+                "letter";
+
+
+            letter.textContent =
+                character;
+
+
+            scene.appendChild(
+                letter
+            );
+
+
+            const x =
+                startX +
+                index * spacing;
+
+
+            const y =
+                startY +
+                Math.random() * 25;
+
+
+            /*
+             * Velocidad horizontal
+             * aleatoria.
+             */
+
+            const velocityX =
+                (Math.random() - .5) * 1.8;
+
+
+            /*
+             * Algunas letras comienzan
+             * ligeramente hacia arriba.
+             */
+
+            const velocityY =
+                -Math.random() * 2;
+
+
+            animateLetter(
+                letter,
+                x,
+                y,
+                velocityX,
+                velocityY
+            );
+
+        }
+    );
+}
+
+
+/* =========================================================
+   ANIMAR LETRA
+   ========================================================= */
+
+function animateLetter(
+    element,
+    x,
+    y,
+    velocityX,
+    velocityY
+){
+
+    let vx =
+        velocityX;
+
+    let vy =
+        velocityY;
+
+
+    let rotation =
+        Math.random() * 30 - 15;
+
+
+    let rotationSpeed =
+        Math.random() * 3 - 1.5;
+
+
+    let opacity = 1;
+
+
+    let age = 0;
+
+
+    /*
+     * Gravedad.
+     */
+
+    const gravity =
+        0.14;
+
+
+    function frame(){
+
+        age++;
+
+
+        /*
+         * Física de caída.
+         */
+
+        vy += gravity;
+
+        x += vx;
+
+        y += vy;
+
+
+        rotation +=
+            rotationSpeed;
+
+
+        /*
+         * Después de aproximadamente
+         * 1 segundo empieza a romperse.
+         */
+
+        if(age > 65){
+
+            opacity -= .018;
+
+
+            /*
+             * Movimiento aleatorio
+             * para simular desintegración.
+             */
+
+            vx +=
+                (Math.random() - .5) * .08;
+
+
+            vy +=
+                (Math.random() - .5) * .08;
+
+
+            rotationSpeed *= 1.01;
+        }
+
+
+        element.style.transform =
+            "translate3d(" +
+            x + "px," +
+            y + "px,0) " +
+            "rotate(" +
+            rotation +
+            "deg)";
+
+
+        element.style.opacity =
+            opacity;
+
+
+        /*
+         * Cuando desaparece,
+         * generamos partículas.
+         */
+
+        if(opacity <= 0){
+
+            explode(
+                x,
+                y
+            );
+
+            element.remove();
+
+            return;
+        }
+
+
+        /*
+         * Si sale de la pantalla.
+         */
+
+        if(
+            y >
+            window.innerHeight + 150
+        ){
+
+            explode(
+                x,
+                y
+            );
+
+            element.remove();
+
+            return;
+        }
+
+
+        requestAnimationFrame(
+            frame
+        );
+    }
+
+
+    requestAnimationFrame(
+        frame
+    );
+}
+
+
+/* =========================================================
+   DESINTEGRACIÓN
+   ========================================================= */
+
+function explode(x,y){
+
+    /*
+     * Número de partículas.
+     */
+
+    const particleCount =
+        24;
+
+
+    for(
+        let i = 0;
+        i < particleCount;
+        i++
+    ){
+
+        const particle =
+            document.createElement(
+                "div"
+            );
+
+
+        particle.className =
+            "particle";
+
+
+        scene.appendChild(
+            particle
+        );
+
+
+        let px =
+            x + 25;
+
+
+        let py =
+            y + 45;
+
+
+        /*
+         * Explosión radial.
+         */
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+
+        const speed =
+            Math.random() * 6 + 1;
+
+
+        let vx =
+            Math.cos(angle) *
+            speed;
+
+
+        let vy =
+            Math.sin(angle) *
+            speed;
+
+
+        let opacity = 1;
+
+
+        /*
+         * Tamaño aleatorio.
+         */
+
+        const size =
+            Math.random() * 4 + 2;
+
+
+        particle.style.width =
+            size + "px";
+
+
+        particle.style.height =
+            size + "px";
+
+
+        function particleFrame(){
+
+            /*
+             * Fricción.
+             */
+
+            vx *= .985;
+
+            vy *= .985;
+
+
+            /*
+             * Gravedad pequeña.
+             */
+
+            vy += .04;
+
+
+            px += vx;
+
+            py += vy;
+
+
+            opacity -= .025;
+
+
+            particle.style.transform =
+                "translate3d(" +
+                px + "px," +
+                py + "px,0)";
+
+
+            particle.style.opacity =
+                opacity;
+
+
+            if(opacity <= 0){
+
+                particle.remove();
+
+                return;
+            }
+
+
+            requestAnimationFrame(
+                particleFrame
+            );
+        }
+
+
+        requestAnimationFrame(
+            particleFrame
+        );
+    }
+}
+
+
+/* =========================================================
+   LIMPIAR PANTALLA CON DOBLE CLICK EN STOP
+   ========================================================= */
+
+stopButton.addEventListener(
+    "dblclick",
+    function(){
+
+        scene.innerHTML = "";
+
+    }
+);
+
+</script>
+
 </body>
 </html>
